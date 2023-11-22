@@ -49,4 +49,30 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+
+  if ($submitForm.is(":visible")) {
+    $submitForm.hide();
+  }
 }
+
+/** Handles with submitting new story with the submit form */
+
+async function submitNewStory(evt) {
+  console.debug("submitNewStory");
+  evt.preventDefault();
+
+  const title = $("#title").val();
+  const author = $("#author").val();
+  const url = $("#url").val();
+  const username = currentUser.username;
+  const data = { title, url, author, username };
+
+  const story = await storyList.addStory(currentUser, data);
+
+  const newStory = generateStoryMarkup(story);
+  $allStoriesList.prepend(newStory);
+
+  putStoriesOnPage();
+}
+
+$submitForm.on("submit", submitNewStory);
