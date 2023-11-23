@@ -207,4 +207,30 @@ class User {
       return null;
     }
   }
+
+  /** Adds a story to the user's favorites */
+
+  async addFavorite(story) {
+    this.favorites.push(story);
+    const token = this.loginToken;
+    await axios({
+      method: "POST",
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      data: { token },
+    });
+  }
+
+  /** Removes a story from the user's favorites */
+
+  async removeFavorite(story) {
+    this.favorites = this.favorites.filter(
+      (story) => story.storyId !== story.storyId
+    );
+    const token = this.loginToken;
+    await axios({
+      method: "DELETE",
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      data: { token },
+    });
+  }
 }

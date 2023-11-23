@@ -25,6 +25,16 @@ function navSubmitClick(evt) {
 
 $navSubmit.on("click", navSubmitClick);
 
+/** Show user's favorited stories when "favorites" is clicked */
+
+function navFavoritesClick(evt) {
+  console.debug("navFavoritesClick", evt);
+  hidePageComponents();
+  showFavoritesList();
+}
+
+$navFavorites.on("click", navFavoritesClick);
+
 /** Show login/signup on click on "login" */
 
 function navLoginClick(evt) {

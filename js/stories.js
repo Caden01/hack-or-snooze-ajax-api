@@ -25,14 +25,29 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
-        <a href="${story.url}" target="a_blank" class="story-link">
-          ${story.title}
-        </a>
-        <small class="story-hostname">(${hostName})</small>
-        <small class="story-author">by ${story.author}</small>
-        <small class="story-user">posted by ${story.username}</small>
+        <div>
+          ${addStar(story, currentUser)} 
+          <a href="${story.url}" target="a_blank" class="story-link">
+            ${story.title}
+          </a>
+          <small class="story-hostname">(${hostName})</small>
+          <small class="story-author">by ${story.author}</small>
+          <small class="story-user">posted by ${story.username}</small>
+        </div>
       </li>
     `);
+}
+
+/** Gives story start that is either favorited or unfavorited */
+
+function addStar(story, user) {
+  const isFavorite = user.favorites.some((s) => s.storyId === story.storyId);
+  const starType = isFavorite ? "fas" : "far";
+  return `
+    <span class="star">
+      <i class="${starType} fa-star"></i>
+    </span>
+  `;
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -50,8 +65,9 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 
-  if ($submitForm.is(":visible")) {
+  if ($submitForm.is(":visible") || $favoritesList.is(":visible")) {
     $submitForm.hide();
+    $favoritesList.hide();
   }
 }
 
@@ -76,3 +92,42 @@ async function submitNewStory(evt) {
 }
 
 $submitForm.on("submit", submitNewStory);
+
+/** Shows favorites list */
+
+function showFavoritesList() {
+  console.debug("showFavoritesList");
+
+  $favoritesList.empty();
+
+  if (currentUser.favorites.length === 0) {
+    $favoritesList.append("<h1>No Stories have been favorited.</h1>");
+  } else {
+    for (let story of currentUser.favorites) {
+      const $story = generateStoryMarkup(story);
+      $favoritesList.append($story);
+    }
+  }
+
+  $favoritesList.show();
+}
+
+/** Favorite/Unfavorite */
+
+async function toggleFavorite(evt) {
+  console.debug("toggleFavorites");
+
+  const $target = $(evt.target);
+  const storyId = $target.closest("li").attr("id");
+  const story = storyList.stories.find((s) => s.storyId === storyId);
+
+  if ($target.hasClass("fas")) {
+    await currentUser.removeFavorite(story);
+    $target.closest("i").toggleClass("fas far");
+  } else {
+    await currentUser.addFavorite(story);
+    $target.closest("i").toggleClass("fas far");
+  }
+}
+
+$allStoryLists.on("click", toggleFavorite);
