@@ -25,6 +25,15 @@ function navSubmitClick(evt) {
 
 $navSubmit.on("click", navSubmitClick);
 
+/** Show user's own stories when "my stories" is clicked */
+
+function navMyStoriesClick(evt) {
+  hidePageComponents();
+  showMyStoriesList();
+}
+
+$navMyStories.on("click", navMyStoriesClick);
+
 /** Show user's favorited stories when "favorites" is clicked */
 
 function navFavoritesClick(evt) {

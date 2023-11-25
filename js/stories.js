@@ -65,9 +65,14 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 
-  if ($submitForm.is(":visible") || $favoritesList.is(":visible")) {
+  if (
+    $submitForm.is(":visible") ||
+    $favoritesList.is(":visible") ||
+    $myStoriesList.is(":visible")
+  ) {
     $submitForm.hide();
     $favoritesList.hide();
+    $myStoriesList.hide();
   }
 }
 
@@ -93,6 +98,23 @@ async function submitNewStory(evt) {
 
 $submitForm.on("submit", submitNewStory);
 
+function showMyStoriesList() {
+  console.debug("showMyStoriesList");
+
+  $myStoriesList.empty();
+
+  if (currentUser.ownStories.length === 0) {
+    $myStoriesList.append("<h1>You have no stories.</h1>");
+  } else {
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story);
+      $myStoriesList.append($story);
+    }
+  }
+
+  $myStoriesList.show();
+}
+
 /** Shows favorites list */
 
 function showFavoritesList() {
@@ -112,7 +134,7 @@ function showFavoritesList() {
   $favoritesList.show();
 }
 
-/** Favorite/Unfavorite */
+/** Favorite/Unfavorite a story */
 
 async function toggleFavorite(evt) {
   console.debug("toggleFavorites");
