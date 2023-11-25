@@ -26,6 +26,7 @@ function generateStoryMarkup(story) {
   return $(`
       <li id="${story.storyId}">
         <div>
+          ${addDeleteBtn(story, currentUser)}
           ${addStar(story, currentUser)} 
           <a href="${story.url}" target="a_blank" class="story-link">
             ${story.title}
@@ -48,6 +49,19 @@ function addStar(story, user) {
       <i class="${starType} fa-star"></i>
     </span>
   `;
+}
+
+function addDeleteBtn(story, user) {
+  const isMyStory = user.ownStories.some((s) => s.storyId === story.storyId);
+  if (isMyStory) {
+    return `
+      <span class="trash-can">
+        <i class="fas fa-trash-alt"></i>
+      </span>
+    `;
+  } else {
+    return "";
+  }
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -97,6 +111,17 @@ async function submitNewStory(evt) {
 }
 
 $submitForm.on("submit", submitNewStory);
+
+/** Deletes story from page */
+
+async function deletStory(evt) {
+  const storyId = $(evt.target).closest("li").attr("id");
+
+  await storyList.removeStory(currentUser, storyId);
+  await putStoriesOnPage();
+}
+
+$body.on("click", ".trash-can", deletStory);
 
 function showMyStoriesList() {
   console.debug("showMyStoriesList");
