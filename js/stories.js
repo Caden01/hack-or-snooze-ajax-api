@@ -19,14 +19,14 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story) {
+function generateStoryMarkup(story, deleteBtn = false) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
         <div>
-          ${addDeleteBtn(story, currentUser)}
+          ${deleteBtn ? addDeleteBtn() : ""}
           ${addStar(story, currentUser)} 
           <a href="${story.url}" target="a_blank" class="story-link">
             ${story.title}
@@ -39,7 +39,7 @@ function generateStoryMarkup(story) {
     `);
 }
 
-/** Gives story start that is either favorited or unfavorited */
+/** Adds star icon to story */
 
 function addStar(story, user) {
   const isFavorite = user.favorites.some((s) => s.storyId === story.storyId);
@@ -51,19 +51,14 @@ function addStar(story, user) {
   `;
 }
 
-function addDeleteBtn(story, user) {
-  const isMyStory = user.ownStories.some((s) => s.storyId === story.storyId);
-  if ($allStoriesList.is(":visible")) {
-    return "";
-  } else if (isMyStory) {
-    return `
+/** Adds delete icon to story */
+
+function addDeleteBtn() {
+  return `
       <span class="trash-can">
         <i class="fas fa-trash-alt"></i>
       </span>
     `;
-  } else {
-    return "";
-  }
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -136,7 +131,7 @@ function showMyStoriesList() {
     $myStoriesList.append("<p>No stories added by user yet!</p>");
   } else {
     for (let story of currentUser.ownStories) {
-      const $story = generateStoryMarkup(story);
+      const $story = generateStoryMarkup(story, true);
       $myStoriesList.append($story);
     }
   }
