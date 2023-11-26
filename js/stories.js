@@ -42,13 +42,17 @@ function generateStoryMarkup(story, deleteBtn = false) {
 /** Adds star icon to story */
 
 function addStar(story, user) {
-  const isFavorite = user.favorites.some((s) => s.storyId === story.storyId);
-  const starType = isFavorite ? "fas" : "far";
-  return `
+  if (currentUser) {
+    const isFavorite = user.favorites.some((s) => s.storyId === story.storyId);
+    const starType = isFavorite ? "fas" : "far";
+    return `
     <span class="star">
       <i class="${starType} fa-star"></i>
     </span>
   `;
+  } else {
+    return "";
+  }
 }
 
 /** Adds delete icon to story */
