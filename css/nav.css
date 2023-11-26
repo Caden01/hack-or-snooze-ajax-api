@@ -4,7 +4,7 @@ nav {
   display: flex;
   background-color: #ff6600;
   align-items: center;
-  padding: 5px 20px;
+  padding: 30px 20px;
   border-radius: 3px 3px 0 0;
 }
 
@@ -15,6 +15,15 @@ nav {
 .nav-link {
   font-size: 0.85rem;
   margin: 0 3px;
+}
+
+.main-nav-links > * {
+  border-left: 2px solid #000;
+  padding-left: 5px;
+}
+
+#nav-my-stories {
+  margin-left: 10px;
 }
 
 .nav-right {
