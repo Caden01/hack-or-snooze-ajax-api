@@ -53,7 +53,9 @@ function addStar(story, user) {
 
 function addDeleteBtn(story, user) {
   const isMyStory = user.ownStories.some((s) => s.storyId === story.storyId);
-  if (isMyStory) {
+  if ($allStoriesList.is(":visible")) {
+    return "";
+  } else if (isMyStory) {
     return `
       <span class="trash-can">
         <i class="fas fa-trash-alt"></i>
@@ -79,12 +81,7 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 
-  if (
-    $submitForm.is(":visible") ||
-    $favoritesList.is(":visible") ||
-    $myStoriesList.is(":visible")
-  ) {
-    $submitForm.hide();
+  if ($favoritesList.is(":visible") || $myStoriesList.is(":visible")) {
     $favoritesList.hide();
     $myStoriesList.hide();
   }
@@ -123,13 +120,20 @@ async function deletStory(evt) {
 
 $body.on("click", ".trash-can", deletStory);
 
+/** Shows my stories list */
+
 function showMyStoriesList() {
   console.debug("showMyStoriesList");
 
   $myStoriesList.empty();
 
+  if ($favoritesList.is(":visible") || $submitForm.is(":visible")) {
+    $favoritesList.hide();
+    $submitForm.hide();
+  }
+
   if (currentUser.ownStories.length === 0) {
-    $myStoriesList.append("<h1>You have no stories.</h1>");
+    $myStoriesList.append("<p>No stories added by user yet!</p>");
   } else {
     for (let story of currentUser.ownStories) {
       const $story = generateStoryMarkup(story);
@@ -147,8 +151,13 @@ function showFavoritesList() {
 
   $favoritesList.empty();
 
+  if ($myStoriesList.is(":visible") || $submitForm.is(":visible")) {
+    $myStoriesList.hide();
+    $submitForm.hide();
+  }
+
   if (currentUser.favorites.length === 0) {
-    $favoritesList.append("<h1>No Stories have been favorited.</h1>");
+    $favoritesList.append("<p>No favorites added!</p>");
   } else {
     for (let story of currentUser.favorites) {
       const $story = generateStoryMarkup(story);

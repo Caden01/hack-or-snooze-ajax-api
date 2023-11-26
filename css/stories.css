@@ -2,6 +2,7 @@
 
 .stories-list {
   margin: 20px 5px;
+  height: 100vh;
 }
 
 .stories-list > li {

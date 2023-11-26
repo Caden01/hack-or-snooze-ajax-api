@@ -18,9 +18,9 @@ $body.on("click", "#nav-all", navAllStories);
 
 function navSubmitClick(evt) {
   console.debug("navSubmitClick", evt);
-  hidePageComponents();
   $submitForm.trigger("reset");
   $submitForm.show();
+  putStoriesOnPage();
 }
 
 $navSubmit.on("click", navSubmitClick);
@@ -43,6 +43,16 @@ function navFavoritesClick(evt) {
 }
 
 $navFavorites.on("click", navFavoritesClick);
+
+/** Clear submit form when "Hack or Snooze" is clicked */
+
+function navBrandClick(evt) {
+  $submitForm.hide();
+  $favoritesList.hide();
+  $myStoriesList.hide();
+}
+
+$navBrand.on("click", navBrandClick);
 
 /** Show login/signup on click on "login" */
 
