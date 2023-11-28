@@ -104,6 +104,7 @@ async function submitNewStory(evt) {
   $allStoriesList.prepend(newStory);
 
   putStoriesOnPage();
+  $submitForm.hide();
 }
 
 $submitForm.on("submit", submitNewStory);
