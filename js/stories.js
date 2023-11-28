@@ -112,13 +112,14 @@ $submitForm.on("submit", submitNewStory);
 /** Deletes story from page */
 
 async function deletStory(evt) {
+  console.log("deleteStory");
   const storyId = $(evt.target).closest("li").attr("id");
 
   await storyList.removeStory(currentUser, storyId);
-  await putStoriesOnPage();
+  await showMyStoriesList();
 }
 
-$body.on("click", ".trash-can", deletStory);
+$myStoriesList.on("click", ".trash-can", deletStory);
 
 /** Shows my stories list */
 
@@ -186,4 +187,4 @@ async function toggleFavorite(evt) {
   }
 }
 
-$allStoryLists.on("click", toggleFavorite);
+$allStoryLists.on("click", ".star", toggleFavorite);
